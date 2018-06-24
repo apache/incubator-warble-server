@@ -1,0 +1,9 @@
+database:
+    driver: sqlite
+    path: /foo/bar/baz
+    
+mail:
+    mailhost:   localhost
+    mailport:   25
+    sender:     Apache Warble <warble@example.org>
+

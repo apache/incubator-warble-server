@@ -1,0 +1,26 @@
+# Master UI account setup
+accounts:
+  driver:   sqlite
+  path:     accounts.db
+  layout:
+    cookie:     text              # Web cookie
+    userid:     text primary key  # user ID
+    password:   text              # password digest
+    superuser:  boolean           # admin or not?
+
+# Node registry database setup
+registry:
+  driver:   sqlite
+  path:     nodes.db
+  layout:
+    id:           integer primary key   # ID of node
+    hostname:     text      # hostname of node
+    apikey:       text      # API key for requests
+    pubkey:       text      # public key for encryption/certification
+    verified:     boolean   # Whether we have verified (accepted) this node via UI
+    enabled:      boolean   # enabled/disabled
+    description:  text      # Optional description of node
+    location:     text      # Physical location of node (addr or DC)
+    ip:           text      # Known public IP of node
+    lastping:     integer   # Last time node was alive
+
