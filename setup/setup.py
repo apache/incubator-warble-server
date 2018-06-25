@@ -25,10 +25,18 @@ if sys.version_info <= (3, 3):
 
 import os
 import sys
-import yaml
-import bcrypt
-import sqlite3
 
+# Test for additional imports, bork if not found
+try:
+    import yaml
+    import bcrypt
+    import sqlite3
+except:
+    print("Looks like you are missing a few python 3 libraries")
+    print("Warble needs the following py3 libs to work: yaml, bcrypt, sqlite3")
+    print("Please install these libraries before continuing")
+    sys.exit(-1)
+    
 # Figure out absolute setup and api paths
 setup_path = os.path.dirname(os.path.realpath(__file__))
 api_path = os.path.realpath("%s/../api" % setup_path)
