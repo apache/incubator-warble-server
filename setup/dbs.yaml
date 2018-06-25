@@ -3,10 +3,18 @@ accounts:
   driver:   sqlite
   path:     accounts.db
   layout:
-    cookie:     text              # Web cookie
     userid:     text primary key  # user ID
     password:   text              # password digest
     superuser:  boolean           # admin or not?
+    
+# UI sessions
+sessions:
+  driver:   sqlite
+  path:     sessions.db
+  layout:
+    cookie:     text      # HTTP cookie
+    userid:     text      # corresponding user account
+    timestamp:  integer   # cookie use timestamp (for timing out sessions)
 
 # Node registry database setup
 registry:
