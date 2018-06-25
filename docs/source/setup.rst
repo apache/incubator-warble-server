@@ -96,6 +96,7 @@ following components installed and set up:
 - - certifi
 - - sqlite3
 - - bcrypt
+- - cryptography >= 2.0.0
 - Gunicorn for Python 3.x (often called gunicorn3) or mod_wsgi
 
 ###########################################
