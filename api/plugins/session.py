@@ -58,6 +58,7 @@ class WarbleSession(object):
         cookies['warble_session'] = cookie
         cookies['warble_session']['expires'] = 86400 * 365 # Expire one year from now
         self.headers.append(('Set-Cookie', cookies['warble_session'].OutputString()))
+        return str(cookie)
         
     def __init__(self, DB, environ, config):
         """
@@ -150,5 +151,5 @@ class WarbleSession(object):
                     self.user['userid'] = 'node:%s' % ndoc['id']
                     self.user['userlevel'] = 'robbit'
         if not cookie:
-            self.newCookie()
+            cookie = self.newCookie()
         self.cookie = cookie
