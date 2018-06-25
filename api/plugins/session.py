@@ -96,8 +96,8 @@ class WarbleSession(object):
                         if sdoc:
                             userid = sdoc['userid']
                             if userid:
-                                sc.execute("SELECT * FROM `accounts` WHERE `userid` = ?", (userid,))
-                                doc = sc.fetchone()
+                                ac.execute("SELECT * FROM `accounts` WHERE `userid` = ?", (userid,))
+                                doc = ac.fetchone()
                         if doc:
                             # Make sure this cookie has been used in the past 7 days, else nullify it.
                             # Further more, run an update of the session if >1 hour ago since last update.
