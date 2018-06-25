@@ -7,6 +7,7 @@ Welcome to Apache Warble's documentation!
    :caption: Contents:
 
    setup
+   design-general
 
 
 Indices and tables
