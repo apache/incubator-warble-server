@@ -1,0 +1,20 @@
+########################################################################
+# UserAccount                                                          #
+########################################################################
+properties:
+  displayname:
+    description: A display name (e.g. full name) for the account
+    example: Warble User
+    type: string
+  email:
+    description: Desired username (email address)
+    example: guest@warble.xyz
+    type: string
+  password:
+    description: Desired password for the account
+    example: warbledemo
+    type: string
+required:
+- email
+- password
+- displayname
