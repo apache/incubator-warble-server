@@ -110,8 +110,8 @@ class WarbleSession(object):
                                 sdoc['timestamp'] = int(time.time()) # Update timestamp in session DB
                                 sc.execute("UPDATE `sessions` SET `timestamp` = ? WHERE `cookie` = ? LIMIT 1", (sdoc['timestamp'], cookie,))
                             if doc:
-                                self.user = doc
-                                self.user['userlevel'] = 'superuser'if doc['superuser'] else 'normal'
+                                self.user = {k:doc[k] for k in doc.keys()}
+                                self.user['userlevel'] = 'superuser' if doc['superuser'] else 'normal'
                         session_conn.commit()
                         session_conn.close()
                         account_conn.close()
