@@ -14,7 +14,7 @@ Client/Server breakdown
 This section shows the basic three applications of Warble.
 
 .. image:: _static/images/diagram-general-principles.png
-   :height: 80pc
+   :width: 90%
    :alt: diagram of general design principles
    :align: center
 
@@ -29,7 +29,7 @@ Server and how they interact. More to come :)
 
 
 .. image:: _static/images/diagram-node-server-relation.png
-   :height: 80pc
+   :width: 90%
    :alt: diagram of general node/server communication
    :align: center
 
@@ -65,7 +65,7 @@ both the alerting system and the visualization system can retrieve and
 process it, ensuring that what they (and you) see is genuine.
 
 .. figure:: _static/images/diagram-node-server-verification.png
-   :height: 80pc
+   :width: 90%
    :alt: diagram of general node/server comms verification
    :align: center
    
