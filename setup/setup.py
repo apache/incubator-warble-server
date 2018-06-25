@@ -86,7 +86,7 @@ db_filepath = os.path.join(datapath, 'accounts.db')
 conn = sqlite3.connect(db_filepath)
 c = conn.cursor()
 try:
-    c.execute("INSERT INTO `accounts` (`cookie`, `userid`, `password`, `superuser`) VALUES ('zzz', ?, ?, 1)", (supername, pwd))
+    c.execute("INSERT INTO `accounts` (`userid`, `password`, `superuser`) VALUES (?, ?, 1)", (supername, pwd))
     conn.commit()
     print("Saved new super user account %s in %s" % (supername, db_filepath))
 except sqlite3.IntegrityError:
