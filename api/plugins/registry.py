@@ -50,7 +50,7 @@ class node(object):
             doc = None
             nc = self.conn.cursor()
             # Load by API Key?
-            if re.match(r"^[a-f0-9]+-[a-f0-9-]+$", nodeid):
+            if isinstance(nodeid, str) and re.match(r"^[a-f0-9]+-[a-f0-9-]+$", nodeid):
                 self.apikey = nodeid
                 nc.execute("SELECT * FROM `registry` WHERE `apikey` = ? LIMIT 1", (self.apikey,))
                 doc = nc.fetchone()
@@ -93,8 +93,8 @@ class node(object):
                 )
         # Save an existing node?
         else:
-            nc.execute("UPDATE `registry` SET `hostname` = ?, `apikey` = ?, `pubkey` = ?, `verified` = ?, `enabled` = ?, `ip` = ?, `lastping` = ?, `version` = ? WHERE `id` = ? LIMIT 1",
-                    (self.hostname, self.apikey, self.pem, 1 if self.verified else 0, 1 if self.enabled else 0, self.ip, self.lastping, self.version, self.id,)
+            nc.execute("UPDATE `registry` SET `hostname` = ?, `apikey` = ?, `pubkey` = ?, `location`= ?, `verified` = ?, `enabled` = ?, `ip` = ?, `lastping` = ?, `version` = ? WHERE `id` = ? LIMIT 1",
+                    (self.hostname, self.apikey, self.pem, self.location, 1 if self.verified else 0, 1 if self.enabled else 0, self.ip, self.lastping, self.version, self.id,)
                 )
         self.conn.commit()
     
