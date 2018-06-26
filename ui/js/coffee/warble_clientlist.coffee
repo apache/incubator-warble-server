@@ -144,7 +144,7 @@ clientlist = (json, state) ->
                 # verify btn
                 dbtn = mk('button')
                 set(dbtn, 'class', 'btn btn-primary')
-                set(dbtn, 'onclick', "modifyNode(#{source.id}, {verified: true});")
+                set(dbtn, 'onclick', "modifyNode(#{source.id}, {verified: true, enabled: true});")
                 dbtn.style.padding = "2px"
                 app(dbtn, txt("Verify"))
                 app(act, dbtn)
