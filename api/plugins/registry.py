@@ -30,7 +30,6 @@ class node(object):
     
     def __init__(self, session, nodeid = None):
         """ Loads a node from the registry or inits a new one """
-        print("registered node")
         self._data = {}
         self.session = session
         self.conn = session.DB.sqlite.open('nodes.db')
