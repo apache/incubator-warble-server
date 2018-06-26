@@ -4598,7 +4598,6 @@ makeClientType = function(main, t) {
       td = mk('th');
       if (el.match(/Hostname/)) {
         td.style.width = "200px";
-        td.style.textAlign = 'right';
       }
       if (el.match(/Location/)) {
         td.style.minWidth = "300px";
