@@ -4592,7 +4592,7 @@ makeClientType = function(main, t) {
     set(tbl, 'class', 'table table-striped');
     thead = mk('thead');
     tr = mk('tr');
-    ref = ['ID', 'IP', 'Hostname', 'Location', 'Verified', 'Enabled', 'Last Ping', 'Actions'];
+    ref = ['ID', 'IP', 'Hostname / Fingerprint', 'Location', 'Verified', 'Enabled', 'Last Ping', 'Actions'];
     for (q = 0, len = ref.length; q < len; q++) {
       el = ref[q];
       td = mk('th');
@@ -4629,7 +4629,7 @@ modifyNode = function(id, stats) {
 };
 
 clientlist = function(json, state) {
-  var act, d, dbtn, len, q, retval, slist, source, sources, t, tbody, ts, vlist;
+  var act, d, dbtn, fp, len, q, retval, slist, source, sources, t, tbody, ts, vlist;
   slist = mk('div');
   vlist = new HTML('div');
   if (json.nodes) {
@@ -4664,6 +4664,13 @@ clientlist = function(json, state) {
       app(d, t);
       t = mk('td');
       app(t, txt(source.hostname));
+      app(t, mk('br'));
+      fp = mk('kbd', {}, source.fingerprint);
+      fp.style.fontWeight = 'normal';
+      fp.style.color = '#333';
+      fp.style.background = 'none';
+      fp.style.boxShadow = 'none';
+      app(t, fp);
       app(d, t);
       t = mk('td');
       app(t, txt(source.location || "(unknown)"));
