@@ -11,6 +11,20 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 components:
   schemas:
+    APIKeyResult:
+      properties:
+        encrypted:
+          description: Whether the API Key is encrypted (in case of nodes/agents requesting
+            it)
+          example: false
+          type: boolean
+        key:
+          description: The (encrypted?) API Key assigned by the server
+          example: abcdef-1234
+          type: string
+      required:
+      - encrypted
+      - key
     ActionCompleted:
       properties:
         message:
@@ -42,6 +56,23 @@ components:
       required:
       - code
       - reason
+    NodeCredentials:
+      properties:
+        hostname:
+          description: The node's own perceived hostname
+          example: foo1.warble.xyz
+          type: string
+        pubkey:
+          description: The node's self-generated public RSA key, PEM-encoded
+          type: string
+        version:
+          description: The version of Warble the node is running
+          example: 0.1.0
+          type: string
+      required:
+      - hostname
+      - pubkey
+      - version
     Timeseries:
       properties:
         interval:
@@ -307,6 +338,29 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: unexpected error
       summary: Create a new account
+  /api/node/register:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodeCredentials'
+        description: Node credentials
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIKeyResult'
+          description: Node successfully registered with server
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: Registers a new node with the Warble server
   /api/session:
     delete:
       requestBody:
