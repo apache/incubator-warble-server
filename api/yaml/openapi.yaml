@@ -396,6 +396,28 @@ paths:
           description: unexpected error
       summary: Lists the nodes in the registry
   /api/node/modify:
+    delete:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodeDetails'
+        description: Node to remove
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionCompleted'
+          description: Node successfully removed from registry
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: Deletes a registered node from the server
     post:
       requestBody:
         content:
