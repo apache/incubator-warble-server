@@ -159,13 +159,13 @@ def run(API, environ, indata, session):
     
     # Delete a session (log out)
     if method == "DELETE":
-        if self.DB.dbtype == 'sqlite':
+        if session.DB.dbtype == 'sqlite':
             c = self.DB.sqlite.open('sessions.db')
             cur = c.cursor()
             cur.execute("DELETE FROM `sessions` WHERE `cookie` = ? LIMIT 1", (session.cookie,))
             c.commit()
             c.close()
-        elif self.DB.dbtype == 'elasticsearch':
+        elif session.DB.dbtype == 'elasticsearch':
             session.DB.ES.delete(index=session.DB.dbname, doc_type='uisession', id = session.cookie)
         session.newCookie()
         yield json.dumps({"message": "Logged out, bye bye!"})
