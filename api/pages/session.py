@@ -160,7 +160,7 @@ def run(API, environ, indata, session):
     # Delete a session (log out)
     if method == "DELETE":
         if session.DB.dbtype == 'sqlite':
-            c = self.DB.sqlite.open('sessions.db')
+            c = session.DB.sqlite.open('sessions.db')
             cur = c.cursor()
             cur.execute("DELETE FROM `sessions` WHERE `cookie` = ? LIMIT 1", (session.cookie,))
             c.commit()
