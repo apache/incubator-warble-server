@@ -87,7 +87,7 @@ def pem(key):
 
 def fingerprint(key):
     """ Derives a digest fingerprint from a key """
-    if isinstance(key, cryptography.hazmat.backends.openssl.rsa._RSAPublicKey):
+    if isinstance(key, cryptography.hazmat.primitives.asymmetric.rsa.RSAPublicKey):
         _pem = pem(key)
     elif type(key) is str:
         _pem = bytes(key, 'ascii', errors = 'replace')
