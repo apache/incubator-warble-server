@@ -78,7 +78,7 @@ def run(API, environ, indata, session):
         node.hostname = hostname
         node.pem = pubkey_pem
         node.version = nodeversion
-        node.ip = environ.get('REMOTE_ADDR', '0.0.0.0')
+        node.ip = environ.get('HTTP_X_FORWARDED_FOR', environ.get('REMOTE_ADDR', '0.0.0.0'))
         
         # Encrypt API key with the pub key we just got. base64 encode the result
         apikey_crypt = str(base64.b64encode(plugins.crypto.encrypt(pubkey, node.apikey)), 'ascii')
