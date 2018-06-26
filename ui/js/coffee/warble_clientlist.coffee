@@ -45,6 +45,9 @@ makeClientType = (main, t) ->
 modifyNode = (id, stats) ->
     stats['id'] = id
     post('node/modify', stats, {}, location.reload())
+    
+deleteNode = (id, stats) ->
+    xdelete('node/modify', {id: id}, {}, location.reload())
 
 clientlist = (json, state) ->
     

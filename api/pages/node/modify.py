@@ -39,6 +39,28 @@
 #             $ref: '#/components/schemas/Error'
 #       description: unexpected error
 #   summary: Modifies base data of a node in the registry
+# delete:
+#   requestBody:
+#     content:
+#       application/json:
+#         schema:
+#           $ref: '#/components/schemas/NodeDetails'
+#     description: Node to remove
+#     required: true
+#   responses:
+#     '200':
+#       content:
+#         application/json:
+#           schema:
+#             $ref: '#/components/schemas/ActionCompleted'
+#       description: Node successfully removed from registry
+#     default:
+#       content:
+#         application/json:
+#           schema:
+#             $ref: '#/components/schemas/Error'
+#       description: unexpected error
+#   summary: Deletes a registered node from the server
 # 
 ########################################################################
 
@@ -101,7 +123,26 @@ def run(API, environ, indata, session):
         
         yield json.dumps({"okay": True, "message": "Changes saved"}, indent = 2)
         return
-
+    
+    # Deleting a node?
+    if method == "DELETE":
+        # Super users only!
+        if not session.user or session.user['userlevel'] != 'superuser':
+            raise API.exception(403, "You need to be logged in as super user to perform this action")
+        
+        # Try finding the node in the registry
+        nodeid = indata['id']
+        node = None
+        try:
+            node = plugins.registry.node(session, nodeid)
+        except:
+            raise API.exception(404, "Could not find a node by this ID to modify.")
+        
+        # Remove node, say cheese!
+        node.remove()
+        yield json.dumps({"okay": True, "message": "Node removed from registry"}, indent = 2)
+        return
+        
     # Finally, if we hit a method we don't know, balk!
     yield API.exception(400, "I don't know this request method!!")
     
