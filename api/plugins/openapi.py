@@ -88,6 +88,7 @@ class OpenAPI():
             where = "item matching schema %s" % schema
 
         # Check that all required fields are present
+        
         if 'required' in pdef:
             for field in pdef['required']:
                 if not field in formdata:
@@ -142,8 +143,7 @@ class OpenAPI():
                     self.validateParameters(mdefs['parameters'], formdata)
                 elif formdata and 'requestBody' not in mdefs:
                     raise OpenAPIException("OpenAPI mismatch: JSON data is now allowed for this request type")
-                elif formdata and 'requestBody' in mdefs and 'content' in mdefs['requestBody']:
-
+                elif 'requestBody' in mdefs and 'content' in mdefs['requestBody']:
                     # SHORTCUT: We only care about JSON input for Warble! Disregard other types
                     if not 'application/json' in mdefs['requestBody']['content']:
                         raise OpenAPIException ("OpenAPI mismatch: API endpoint accepts input, but no application/json definitions found in api.yaml!")
