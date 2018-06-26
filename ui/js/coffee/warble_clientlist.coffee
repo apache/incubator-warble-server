@@ -49,6 +49,27 @@ modifyNode = (id, stats) ->
 deleteNode = (id, stats) ->
     xdelete('node/modify', {id: id}, {}, location.reload())
 
+nodeLocation = (id, obj) ->
+    if not document.getElementById("tnodeloc_#{id}")
+        loc = obj.innerText
+        obj.innerHTML = ""
+        ip = mk('input', {data: loc, id: "tnodeloc_#{id}", type: 'text', onkeydown: "saveNodeLocation(#{id}, this, event);"})
+        app(obj, ip)
+        ip.focus()
+    
+
+saveNodeLocation = (id, obj, e) ->
+    if e.key == 'Enter'
+        nloc = obj.value
+        post('node/modify', { id: id, location: nloc}, {id: id, location: nloc}, savedNodeLocation)
+    else if e.key == 'Escape'
+        savedNodeLocation({}, {id: id, location: obj.getAttribute('data')})
+
+savedNodeLocation = (json, state) ->
+    obj = document.getElementById("nodeloc_#{state.id}")
+    obj.innerHTML = ""
+    app(obj, txt(state.location))
+    
 clientlist = (json, state) ->
     
     slist = mk('div')
@@ -98,9 +119,12 @@ clientlist = (json, state) ->
             app(d, t)
             
             # node location
-            t = mk('td')
+            t = mk('td', {id: "nodeloc_#{source.id}", onclick: "nodeLocation(#{source.id}, this, event);"})
             app(t, txt(source.location||"(unknown)"))
             app(d, t)
+            
+            
+            
             
             # node verified?
             t = mk('td')
