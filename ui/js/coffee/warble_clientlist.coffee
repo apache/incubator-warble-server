@@ -18,7 +18,7 @@ makeClientType = (main, t) ->
         set(tbl, 'class', 'table table-striped')
         thead = mk('thead')
         tr = mk('tr')
-        for el in ['ID', 'IP', 'Hostname', 'Location', 'Verified', 'Enabled', 'Last Ping',  'Actions']
+        for el in ['ID', 'IP', 'Hostname / Fingerprint', 'Location', 'Verified', 'Enabled', 'Last Ping',  'Actions']
             td = mk('th')
             if el.match(/Hostname/)
                 td.style.width = "200px"
@@ -85,6 +85,13 @@ clientlist = (json, state) ->
             # node hostname
             t = mk('td')
             app(t, txt(source.hostname))
+            app(t, mk('br'))
+            fp = mk('kbd', {}, source.fingerprint)
+            fp.style.fontWeight = 'normal'
+            fp.style.color = '#333'
+            fp.style.background = 'none'
+            fp.style.boxShadow = 'none'
+            app(t, fp)
             app(d, t)
             
             # node location
@@ -155,6 +162,8 @@ clientlist = (json, state) ->
             
             app(d, act)
             tbody.inject(d)
+            
+            
         
     #app(slist, tbl)
     state.widget.inject(slist, true)
