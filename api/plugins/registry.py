@@ -76,7 +76,8 @@ class node(object):
                 self.version = doc['version']
                 self.key = plugins.crypto.loads(self.pem)
                 self.fingerprint = plugins.crypto.fingerprint(self.pem)
-        
+            else:
+                raise Exception("No such node found in registry")
         # new node from scratch?
         else:
             self.apikey = str(uuid.uuid4())
