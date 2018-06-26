@@ -41,12 +41,13 @@ Client and Server communication
 Agents and Nodes (referred to in this segment as `clients`) communicate
 with the Warble Server using a three-stage protocol:
 
-1. First time a client is started, it generates an async key pair for
-   encryption and subsequent verification/signing. The private key is
-   stored on-disk on the client host, and the public key is sent to the
-   node registry on the master, along with a request to add the client to
-   the node registry as a verified client. The Server registers a unique
-   API key for each client, and binds the public key to this API key.
+1. First time a client is started, it generates an async RSA key pair
+   (default key size is 4096 bits) for encryption and subsequent
+   verification/signing. The private key is stored on-disk on the client
+   host, and the public key is sent to the node registry on the master,
+   along with a request to add the client to the node registry as a
+   verified client. The Server registers a unique API key for each
+   client, and binds the public key to this API key.
 
 2. Once verified, a client can request test targets and parameters from
    the node registry at the Server. This data is sent back to the client
