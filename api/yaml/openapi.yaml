@@ -379,6 +379,22 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: unexpected error
       summary: Create a new account
+  /api/node/list:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NodeList'
+          description: List of nodes in registry
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: Lists the nodes in the registry
   /api/node/modify:
     post:
       requestBody:
