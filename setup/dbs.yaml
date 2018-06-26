@@ -31,4 +31,5 @@ registry:
     location:     text      # Physical location of node (addr or DC)
     ip:           text      # Known public IP of node
     lastping:     integer   # Last time node was alive
+    version:      text      # Node client software version
 
