@@ -109,8 +109,8 @@ class WarbleSession(object):
                                 sdoc = None # Wipe it!
                                 doc = None
                             elif age > 3600:
-                                sdoc['timestamp'] = int(time.time()) # Update timestamp in session DB
-                                sc.execute("UPDATE `sessions` SET `timestamp` = ? WHERE `cookie` = ? LIMIT 1", (sdoc['timestamp'], cookie,))
+                                st = int(time.time()) # Update timestamp in session DB
+                                sc.execute("UPDATE `sessions` SET `timestamp` = ? WHERE `cookie` = ? LIMIT 1", (st, cookie,))
                             if doc:
                                 self.user = {k:doc[k] for k in doc.keys()}
                                 self.user['userlevel'] = 'superuser' if doc['superuser'] else 'normal'
