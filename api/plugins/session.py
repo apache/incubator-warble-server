@@ -29,6 +29,7 @@ import traceback
 import http.cookies
 import uuid
 import time
+import plugins.registry
 
 class WarbleSession(object):
 
@@ -67,6 +68,7 @@ class WarbleSession(object):
         """
         self.config = config
         self.user = None
+        self.client = None
         self.DB = DB
         self.headers = [('Content-Type', 'application/json')]
         self.cookie = None
@@ -141,15 +143,10 @@ class WarbleSession(object):
         elif 'HTTP_APIKEY' in environ:
             cookie = environ['HTTP_APIKEY']
             if re.match(r"^[-a-f0-9]+$", cookie): # Validate cookie, must follow UUID4 specs
-                registry_conn = self.DB.sqlite.open('nodes.db')
-                rc = registry_conn.cursor()
-                rc.execute("SELECT * FROM `registry` WHERE `apikey` = ? LIMIT 1", (cookie,))
-                ndoc = rc.fetchone()
-                if ndoc:
-                    self.user = {k:ndoc[k] for k in ndoc.keys()}
-                    self.user['human'] = False
-                    self.user['userid'] = 'node:%s' % ndoc['id']
-                    self.user['userlevel'] = 'robbit'
+                try:
+                    self.client = plugins.registry.node(self, cookie)
+                except:
+                    pass
         if not cookie:
             cookie = self.newCookie()
         self.cookie = cookie
