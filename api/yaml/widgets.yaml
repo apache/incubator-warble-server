@@ -1,0 +1,44 @@
+widgets:
+### DASHBOARD
+    frontpage:
+        title: "Dashboard"
+        rows:
+            -
+                name: "Client statuses"
+                children:
+                    -
+                        type: trend
+                        blocks: 12
+                        name: "Client activity"
+                        source: org/trends
+            -
+                name: "Overall status"
+                children:
+                    -
+                        type: status
+                        blocks: 12
+                        name: "Overall status"
+                        source: org/trends
+                        
+            -
+                name: "Latest errors"
+                children:
+                    -
+                        type: list
+                        blocks: 12
+                        name: "Latest errors"
+                        source: org/list
+
+    clients:
+        title: "Agents and Nodes"
+        rows:
+            -
+                name: "Warble Nodes"
+                children:
+                    -
+                        type: clientlist
+                        method: get
+                        blocks: 12
+                        name: "Warble Nodes"
+                        source: node/list
+
