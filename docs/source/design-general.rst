@@ -53,7 +53,6 @@ with the Warble Server using a three-stage protocol:
    in encrypted form, using the previously sent public key. Thus, only
    a verified client can get test targets, and only the client should be
    able to decrypt the payload and get clear-text target data.
-
  
 3. Once a client has completed a test (or a batch of tests), the result
    is sent to the server and signed using the private key. Thus, the
