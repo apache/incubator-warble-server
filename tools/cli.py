@@ -68,7 +68,22 @@ if __name__ == "__main__":
                 for node in nodes:
                     print("  %3u    %-28s     %s            %s          %s" %  (node['id'], node['hostname'][:27], node['enabled'] and '✓' or 'x', node['verified'] and '✓' or 'x', node['fingerprint'][:28]))
                 
-            if 'verify' in cmd:
+            if 'unverify' in cmd:
+                nodeid = int(cmd.replace('unverify ', ''))
+                print("Unverifying node no. %u" % nodeid)
+                rv = requests.post('http://localhost:8000/api/node/modify',  headers = {
+                    'Cookie': cookie
+                    },
+                    json = {
+                        'id': nodeid,
+                        'verified': False
+                    }
+                    )
+                if rv.status_code == 200:
+                    print("Node successfully unverified!")
+                else:
+                    print(rv.text)
+            elif 'verify' in cmd:
                 nodeid = int(cmd.replace('verify ', ''))
                 print("Verifying node no. %u" % nodeid)
                 rv = requests.post('http://localhost:8000/api/node/modify',  headers = {
