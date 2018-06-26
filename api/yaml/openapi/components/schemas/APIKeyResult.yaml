@@ -1,0 +1,16 @@
+########################################################################
+# APIKeyResult                                                         #
+########################################################################
+properties:
+  encrypted:
+    description: Whether the API Key is encrypted (in case of nodes/agents requesting it)
+    example: false
+    type: boolean
+  key:
+    description: The (encrypted?) API Key assigned by the server
+    type: string
+    example: abcdef-1234
+required:
+- encrypted
+- key
+
