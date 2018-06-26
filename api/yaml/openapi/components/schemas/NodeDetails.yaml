@@ -1,0 +1,43 @@
+########################################################################
+# NodeDetails                                                          #
+########################################################################
+properties:
+  id:
+    description: the numeric ID of the node to modify
+    example: 42
+    type: integer
+  verified:
+    description: Whether the node is verified as ours or not
+    example: true
+    type: boolean
+  enabled:
+    description: Whether the node is enabled or paused
+    example: true
+    type: boolean
+  hostname:
+    description: The node's own perceived hostname
+    example: foo1.warble.xyz
+    type: string
+  pubkey:
+    description: The node's self-generated public RSA key, PEM-encoded
+    type: string
+  version:
+    description: The version of Warble the node is running
+    type: string
+    example: 0.1.0
+  description:
+    description: A description of the node
+    type: string
+    example: This is the internal node in DC1
+  location:
+    description: Physical location of the node
+    type: string
+    example: DC1, Chicago, Illinois
+  ip:
+    description: The IP generally associated with this client
+    type: string
+  lastping:
+    description: The last UNIX timestamp of activity from the client
+    type: integer
+required:
+  - id
