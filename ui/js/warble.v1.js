@@ -4645,6 +4645,7 @@ nodeLocation = function(id, obj) {
       type: 'text',
       onkeydown: "saveNodeLocation(" + id + ", this, event);"
     });
+    ip.value = loc;
     app(obj, ip);
     return ip.focus();
   }
