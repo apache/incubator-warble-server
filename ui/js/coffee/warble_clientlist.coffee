@@ -85,6 +85,21 @@ savedNodeValue = (json, state) ->
     obj = document.getElementById("node_#{state.type}_#{state.id}")
     obj.innerHTML = ""
     app(obj, txt(state[state.type]))
+
+# Node list sorting
+nodeStatusSort = (a,b) =>
+    # Favor enabled over not enabled
+    return -1 if a.enabled and not b.enabled
+    return 1 if b.enabled and not a.enabled
+    
+    # Favor verified over not verified
+    return -1 if a.verified and not b.verified
+    return 1 if b.verified and not a.verified
+    
+    # Fall back to hostname alpha-sort
+    return a.hostname.localeCompare(b.hostname)
+
+    
     
 clientlist = (json, state) ->
     
@@ -93,7 +108,7 @@ clientlist = (json, state) ->
     if json.nodes
         sources = json.nodes
         sources = if sources.sort then sources else []
-        sources.sort((a,b) => a.id - b.id)
+        sources.sort(nodeStatusSort)
         for source in sources
             
             card = new HTML('div', {class: 'clientcard'} )
