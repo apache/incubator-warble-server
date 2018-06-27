@@ -47,13 +47,14 @@ modifyNode = (id, stats) ->
     post('node/modify', stats, {}, location.reload())
     
 deleteNode = (id, stats) ->
-    xdelete('node/modify', {id: id}, {}, location.reload())
+    if confirm('Are you sure you wish to delete this node?')
+        xdelete('node/modify', {id: id}, {}, location.reload())
 
 nodeLocation = (id, obj) ->
     if not document.getElementById("tnodeloc_#{id}")
         loc = obj.innerText
         obj.innerHTML = ""
-        ip = mk('input', {data: loc, id: "tnodeloc_#{id}", type: 'text', onkeydown: "saveNodeLocation(#{id}, this, event);"})
+        ip = new HTML('input', {style: { color: '#333', width: '320px', height: '24px', padding: '0px'}, data: loc, id: "tnodeloc_#{id}", type: 'text', onkeydown: "saveNodeLocation(#{id}, this, event);"})
         ip.value = loc
         app(obj, ip)
         ip.focus()
@@ -76,121 +77,118 @@ clientlist = (json, state) ->
     slist = mk('div')
     vlist = new HTML('div')
     if json.nodes
-        st = makeClientType(vlist, 'node')
         sources = json.nodes
         sources = if sources.sort then sources else []
         sources.sort((a,b) => a.id - b.id)
         for source in sources
-            tbody = st.div
-            st.count++;
             
-            d = mk('tr')
-            set(d, 'id', source.id)
-            set(d, 'scope', 'row')
+            card = new HTML('div', {class: 'clientcard'} )
             
-            if source.verified == true
-                d.style.fontWeight = 'bold'
-            else
-                d.style.color = '#942'
+            # node verified?
+            d = new HTML('div', {height: '36px', position: 'relative', style: {marginBottom: '12px'}})
             
-            if source.enabled == false
-                d.style.fontStyle = 'italic'
-                d.style.color = "#666"
+            line = new HTML('div', {style: { position: 'relative', lineHeight: '30px', height: '30px', float: 'left', padding: '2px',  display: 'inline-block', textAlign: 'center', margin: '-5.25px', width: '225px', borderTopLeftRadius: '6px', background: '#4c8946', marginBottom: '4px'}})
+            vrf = []
+            if not source.verified
+                line.style.background = '#bc9621'
+                card.style.borderColor = '#bc9621'
+                line.style.width = '445px'
+                vrf = [
+                    'Unverified Node',
+                    new HTML('button', {class: 'btn btn-sm btn-primary', onclick: "modifyNode(#{source.id}, {verified: true, enabled: true});"}, "Verify + Enable")
+                ]
+                line.inject(vrf)
+                # delete btn
+                btn = new HTML('button', {title: 'Delete node', class: 'btn btn-square btn-danger', style: {position: 'relative', float: 'right', display: 'inline-block'}, onclick: "deleteNode(#{source.id});"},
+                               new HTML('i', {class: 'fa fa-trash'}, '')
+                              )
+                line.inject(btn)
+                d.inject(line)
+            
+            # node enabled?
+            if source.verified
+                line = new HTML('div', {style: {position: 'relative', lineHeight: '30px', height: '30px', float: 'right', padding: '2px',display: 'inline-block', textAlign: 'center', margin: '-5.25px', width: '445px', borderTopRightRadius: '6px', background: '#4c8946', marginBottom: '4px'}})
+                vrf = []
+                card.style.borderColor = '#4c8946'
+                if source.enabled
+                    vrf = [
+                        'Active',
+                        new HTML('button', {class: 'btn btn-sm btn-warning', onclick: "modifyNode(#{source.id}, {enabled: false});"}, "Disable")
+                    ]
+                else
+                    line.style.background = '#777'
+                    card.style.borderColor = '#777'
+                    vrf = [
+                        'Disabled',
+                        new HTML('button', {class: 'btn btn-sm btn-primary', onclick: "modifyNode(#{source.id}, {enabled: true});"}, "Re-enable")
+                    ]
+                line.inject(vrf)
+                d.inject(line)
                 
+                # delete btn
+                btn = new HTML('button', {title: 'Delete node', class: 'btn btn-square btn-danger', style: {position: 'relative', float: 'right', display: 'inline-block'}, onclick: "deleteNode(#{source.id});"},
+                               new HTML('i', {class: 'fa fa-trash'}, '')
+                              )
+                line.inject(btn)
+            
+            
+            
+            
+            card.inject(d)
+            vlist.inject(card)
+            
+            d = new HTML('p')
+            card.inject(d)
+            
             # node ID
-            t = mk('td')
-            app(t, txt(source.id.pad(3)))
-            app(d, t)
+            line = new HTML('div', {class: 'clientcardline'})
+            line.inject( [
+                new HTML('b', {}, "Node ID: "),
+                txt(source.id)
+            ])
+            d.inject(line)
             
             # node ip
-            t = mk('td')
-            app(t, txt(source.ip))
-            app(d, t)
+            line = new HTML('div', {class: 'clientcardline'})
+            line.inject( [
+                new HTML('b', {}, "Node IP: "),
+                txt(source.ip)
+            ])
+            d.inject(line)
             
             
             # node hostname
-            t = mk('td')
-            app(t, txt(source.hostname))
-            app(t, mk('br'))
-            fp = mk('kbd', {}, source.fingerprint)
-            fp.style.fontWeight = 'normal'
-            fp.style.color = '#333'
-            fp.style.background = 'none'
-            fp.style.boxShadow = 'none'
-            app(t, fp)
-            app(d, t)
+            line = new HTML('div', {class: 'clientcardline'})
+            line.inject( [
+                new HTML('b', {}, "Hostname: "),
+                txt(source.hostname)
+            ])
+            d.inject(line)
+            
+            # node fingerprint
+            line = new HTML('div', {class: 'clientcardline'})
+            line.inject( [
+                new HTML('b', {}, "Fingerprint: "),
+                new HTML('kbd', {}, source.fingerprint)
+            ])
+            d.inject(line)
             
             # node location
-            t = mk('td', {id: "nodeloc_#{source.id}", onclick: "nodeLocation(#{source.id}, this, event);"})
-            app(t, txt(source.location||"(unknown)"))
-            app(d, t)
+            line = new HTML('div', {class: 'clientcardline'})
+            line.inject( [
+                new HTML('b', {}, "Location: "),
+                new HTML('span', {id: "nodeloc_#{source.id}", onclick: "nodeLocation(#{source.id}, this, event);"}, txt(source.location||"(unknown)"))
+            ])
+            d.inject(line)
             
             
             
+            d.inject(line)
             
-            # node verified?
-            t = mk('td')
-            t.style.color = if source.verified then "#393" else '#942'
-            app(t, txt(if source.verified then '✓' else 'x'))
-            app(d, t)
-            
-            # node enabled?
-            t = mk('td')
-            t.style.color = if source.enabled then "#393" else '#942'
-            app(t, txt(if source.enabled then '✓' else 'x'))
-            app(d, t)
-            
-            # node ping?
-            t = mk('td')
-            ts = new Date(source.lastping*1000.0).ISOBare() + " UTC"
-            app(t, txt(ts))
-            app(d, t)
+            line.inject(new HTML('br'))
+            line.inject(new HTML('br'))
             
             
-            
-            act = mk('td')
-            
-            # This only applies to verified nodes!
-            if source.verified == true
-                if source.enabled == false
-                    # enable btn
-                    dbtn = mk('button')
-                    set(dbtn, 'class', 'btn btn-success')
-                    set(dbtn, 'onclick', "modifyNode(#{source.id}, {enabled: true});")
-                    dbtn.style.padding = "2px"
-                    app(dbtn, txt("Enable"))
-                    app(act, dbtn)
-                else
-                    # disable btn
-                    dbtn = mk('button')
-                    set(dbtn, 'class', 'btn btn-warning')
-                    set(dbtn, 'onclick', "modifyNode(#{source.id}, {enabled: false});")
-                    dbtn.style.padding = "2px"
-                    app(dbtn, txt("Disable"))
-                    app(act, dbtn)
-                
-            if source.verified == false
-                # verify btn
-                dbtn = mk('button')
-                set(dbtn, 'class', 'btn btn-primary')
-                set(dbtn, 'onclick', "modifyNode(#{source.id}, {verified: true, enabled: true});")
-                dbtn.style.padding = "2px"
-                app(dbtn, txt("Verify"))
-                app(act, dbtn)
-            
-                
-            
-            
-            # delete btn
-            dbtn = mk('button')
-            set(dbtn, 'class', 'btn btn-danger')
-            set(dbtn, 'onclick', "deleteNode(#{source.id});")
-            dbtn.style.padding = "2px"
-            app(dbtn, txt("Delete"))
-            app(act, dbtn)
-            
-            app(d, act)
-            tbody.inject(d)
             
             
         
