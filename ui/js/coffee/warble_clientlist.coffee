@@ -54,6 +54,7 @@ nodeLocation = (id, obj) ->
         loc = obj.innerText
         obj.innerHTML = ""
         ip = mk('input', {data: loc, id: "tnodeloc_#{id}", type: 'text', onkeydown: "saveNodeLocation(#{id}, this, event);"})
+        ip.value = loc
         app(obj, ip)
         ip.focus()
     
