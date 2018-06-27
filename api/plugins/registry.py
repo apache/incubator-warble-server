@@ -93,8 +93,8 @@ class node(object):
                 )
         # Save an existing node?
         else:
-            nc.execute("UPDATE `registry` SET `hostname` = ?, `apikey` = ?, `pubkey` = ?, `location`= ?, `verified` = ?, `enabled` = ?, `ip` = ?, `lastping` = ?, `version` = ? WHERE `id` = ? LIMIT 1",
-                    (self.hostname, self.apikey, self.pem, self.location, 1 if self.verified else 0, 1 if self.enabled else 0, self.ip, self.lastping, self.version, self.id,)
+            nc.execute("UPDATE `registry` SET `hostname` = ?, `apikey` = ?, `pubkey` = ?, `location`= ?, `verified` = ?, `enabled` = ?, `ip` = ?, `lastping` = ?, `version` = ?, `description`= ? WHERE `id` = ? LIMIT 1",
+                    (self.hostname, self.apikey, self.pem, self.location, 1 if self.verified else 0, 1 if self.enabled else 0, self.ip, self.lastping, self.version, self.description, self.id,)
                 )
         self.conn.commit()
     
