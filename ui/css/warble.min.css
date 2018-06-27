@@ -3127,7 +3127,7 @@ body.error .logo h1 {
     font-size: 1.8rem;
     border-bottom: 1px solid #333;
     margin-bottom: 5px;
-    background: rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.2);
 }
 
 .clientcard kbd {
