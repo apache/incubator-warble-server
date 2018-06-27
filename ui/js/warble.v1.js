@@ -4629,9 +4629,11 @@ modifyNode = function(id, stats) {
 };
 
 deleteNode = function(id, stats) {
-  return xdelete('node/modify', {
-    id: id
-  }, {}, location.reload());
+  if (confirm('Are you sure you wish to delete this node?')) {
+    return xdelete('node/modify', {
+      id: id
+    }, {}, location.reload());
+  }
 };
 
 nodeLocation = function(id, obj) {
@@ -4639,7 +4641,13 @@ nodeLocation = function(id, obj) {
   if (!document.getElementById("tnodeloc_" + id)) {
     loc = obj.innerText;
     obj.innerHTML = "";
-    ip = mk('input', {
+    ip = new HTML('input', {
+      style: {
+        color: '#333',
+        width: '320px',
+        height: '24px',
+        padding: '0px'
+      },
       data: loc,
       id: "tnodeloc_" + id,
       type: 'text',
@@ -4678,11 +4686,10 @@ savedNodeLocation = function(json, state) {
 };
 
 clientlist = function(json, state) {
-  var act, d, dbtn, fp, len, q, retval, slist, source, sources, t, tbody, ts, vlist;
+  var btn, card, d, len, line, q, retval, slist, source, sources, vlist, vrf;
   slist = mk('div');
   vlist = new HTML('div');
   if (json.nodes) {
-    st = makeClientType(vlist, 'node');
     sources = json.nodes;
     sources = sources.sort ? sources : [];
     sources.sort((function(_this) {
@@ -4692,87 +4699,148 @@ clientlist = function(json, state) {
     })(this));
     for (q = 0, len = sources.length; q < len; q++) {
       source = sources[q];
-      tbody = st.div;
-      st.count++;
-      d = mk('tr');
-      set(d, 'id', source.id);
-      set(d, 'scope', 'row');
-      if (source.verified === true) {
-        d.style.fontWeight = 'bold';
-      } else {
-        d.style.color = '#942';
-      }
-      if (source.enabled === false) {
-        d.style.fontStyle = 'italic';
-      }
-      t = mk('td');
-      app(t, txt(source.id.pad(3)));
-      app(d, t);
-      t = mk('td');
-      app(t, txt(source.ip));
-      app(d, t);
-      t = mk('td');
-      app(t, txt(source.hostname));
-      app(t, mk('br'));
-      fp = mk('kbd', {}, source.fingerprint);
-      fp.style.fontWeight = 'normal';
-      fp.style.color = '#333';
-      fp.style.background = 'none';
-      fp.style.boxShadow = 'none';
-      app(t, fp);
-      app(d, t);
-      t = mk('td', {
-        id: "nodeloc_" + source.id,
-        onclick: "nodeLocation(" + source.id + ", this, event);"
+      card = new HTML('div', {
+        "class": 'clientcard'
       });
-      app(t, txt(source.location || "(unknown)"));
-      app(d, t);
-      t = mk('td');
-      t.style.color = source.verified ? "#393" : '#942';
-      app(t, txt(source.verified ? '✓' : 'x'));
-      app(d, t);
-      t = mk('td');
-      t.style.color = source.enabled ? "#393" : '#942';
-      app(t, txt(source.enabled ? '✓' : 'x'));
-      app(d, t);
-      t = mk('td');
-      ts = new Date(source.lastping * 1000.0).ISOBare() + " UTC";
-      app(t, txt(ts));
-      app(d, t);
-      act = mk('td');
-      if (source.verified === true) {
-        if (source.enabled === false) {
-          dbtn = mk('button');
-          set(dbtn, 'class', 'btn btn-success');
-          set(dbtn, 'onclick', "modifyNode(" + source.id + ", {enabled: true});");
-          dbtn.style.padding = "2px";
-          app(dbtn, txt("Enable"));
-          app(act, dbtn);
-        } else {
-          dbtn = mk('button');
-          set(dbtn, 'class', 'btn btn-warning');
-          set(dbtn, 'onclick', "modifyNode(" + source.id + ", {enabled: false});");
-          dbtn.style.padding = "2px";
-          app(dbtn, txt("Disable"));
-          app(act, dbtn);
+      d = new HTML('div', {
+        height: '36px',
+        position: 'relative',
+        style: {
+          marginBottom: '12px'
         }
+      });
+      line = new HTML('div', {
+        style: {
+          position: 'relative',
+          lineHeight: '30px',
+          height: '30px',
+          float: 'left',
+          padding: '2px',
+          display: 'inline-block',
+          textAlign: 'center',
+          margin: '-5.25px',
+          width: '225px',
+          borderTopLeftRadius: '6px',
+          background: '#4c8946',
+          marginBottom: '4px'
+        }
+      });
+      vrf = [];
+      if (!source.verified) {
+        line.style.background = '#bc9621';
+        card.style.borderColor = '#bc9621';
+        line.style.width = '445px';
+        vrf = [
+          'Unverified Node', new HTML('button', {
+            "class": 'btn btn-sm btn-primary',
+            onclick: "modifyNode(" + source.id + ", {verified: true, enabled: true});"
+          }, "Verify + Enable")
+        ];
+        line.inject(vrf);
+        btn = new HTML('button', {
+          title: 'Delete node',
+          "class": 'btn btn-square btn-danger',
+          style: {
+            position: 'relative',
+            float: 'right',
+            display: 'inline-block'
+          },
+          onclick: "deleteNode(" + source.id + ");"
+        }, new HTML('i', {
+          "class": 'fa fa-trash'
+        }, ''));
+        line.inject(btn);
+        d.inject(line);
       }
-      if (source.verified === false) {
-        dbtn = mk('button');
-        set(dbtn, 'class', 'btn btn-primary');
-        set(dbtn, 'onclick', "modifyNode(" + source.id + ", {verified: true, enabled: true});");
-        dbtn.style.padding = "2px";
-        app(dbtn, txt("Verify"));
-        app(act, dbtn);
+      if (source.verified) {
+        line = new HTML('div', {
+          style: {
+            position: 'relative',
+            lineHeight: '30px',
+            height: '30px',
+            float: 'right',
+            padding: '2px',
+            display: 'inline-block',
+            textAlign: 'center',
+            margin: '-5.25px',
+            width: '445px',
+            borderTopRightRadius: '6px',
+            background: '#4c8946',
+            marginBottom: '4px'
+          }
+        });
+        vrf = [];
+        card.style.borderColor = '#4c8946';
+        if (source.enabled) {
+          vrf = [
+            'Active', new HTML('button', {
+              "class": 'btn btn-sm btn-warning',
+              onclick: "modifyNode(" + source.id + ", {enabled: false});"
+            }, "Disable")
+          ];
+        } else {
+          line.style.background = '#777';
+          card.style.borderColor = '#777';
+          vrf = [
+            'Disabled', new HTML('button', {
+              "class": 'btn btn-sm btn-primary',
+              onclick: "modifyNode(" + source.id + ", {enabled: true});"
+            }, "Re-enable")
+          ];
+        }
+        line.inject(vrf);
+        d.inject(line);
+        btn = new HTML('button', {
+          title: 'Delete node',
+          "class": 'btn btn-square btn-danger',
+          style: {
+            position: 'relative',
+            float: 'right',
+            display: 'inline-block'
+          },
+          onclick: "deleteNode(" + source.id + ");"
+        }, new HTML('i', {
+          "class": 'fa fa-trash'
+        }, ''));
+        line.inject(btn);
       }
-      dbtn = mk('button');
-      set(dbtn, 'class', 'btn btn-danger');
-      set(dbtn, 'onclick', "deleteNode(" + source.id + ");");
-      dbtn.style.padding = "2px";
-      app(dbtn, txt("Delete"));
-      app(act, dbtn);
-      app(d, act);
-      tbody.inject(d);
+      card.inject(d);
+      vlist.inject(card);
+      d = new HTML('p');
+      card.inject(d);
+      line = new HTML('div', {
+        "class": 'clientcardline'
+      });
+      line.inject([new HTML('b', {}, "Node ID: "), txt(source.id)]);
+      d.inject(line);
+      line = new HTML('div', {
+        "class": 'clientcardline'
+      });
+      line.inject([new HTML('b', {}, "Node IP: "), txt(source.ip)]);
+      d.inject(line);
+      line = new HTML('div', {
+        "class": 'clientcardline'
+      });
+      line.inject([new HTML('b', {}, "Hostname: "), txt(source.hostname)]);
+      d.inject(line);
+      line = new HTML('div', {
+        "class": 'clientcardline'
+      });
+      line.inject([new HTML('b', {}, "Fingerprint: "), new HTML('kbd', {}, source.fingerprint)]);
+      d.inject(line);
+      line = new HTML('div', {
+        "class": 'clientcardline'
+      });
+      line.inject([
+        new HTML('b', {}, "Location: "), new HTML('span', {
+          id: "nodeloc_" + source.id,
+          onclick: "nodeLocation(" + source.id + ", this, event);"
+        }, txt(source.location || "(unknown)"))
+      ]);
+      d.inject(line);
+      d.inject(line);
+      line.inject(new HTML('br'));
+      line.inject(new HTML('br'));
     }
   }
   state.widget.inject(slist, true);
