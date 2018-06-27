@@ -54,7 +54,7 @@ nodeLocation = (id, obj) ->
     if not document.getElementById("tnodeloc_#{id}")
         loc = obj.innerText
         obj.innerHTML = ""
-        ip = new HTML('input', {style: { color: '#333', width: '320px', height: '24px', padding: '0px'}, data: loc, id: "tnodeloc_#{id}", type: 'text', onkeydown: "saveNodeLocation(#{id}, this, event);"})
+        ip = new HTML('input', {style: { color: '#333', width: '320px', height: '24px', padding: '0px'}, data: loc, id: "tnodeloc_#{id}", type: 'text', onkeydown: "saveNodeLocation(#{id}, this, event);", onblur: "savedNodeLocation({}, {id: #{id}, location: this.getAttribute('data')});"})
         ip.value = loc
         app(obj, ip)
         ip.focus()
