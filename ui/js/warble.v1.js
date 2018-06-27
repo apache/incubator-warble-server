@@ -4828,6 +4828,17 @@ clientlist = function(json, state) {
       line = new HTML('div', {
         "class": 'clientcardline'
       });
+      line.inject([
+        new HTML('b', {}, "Notes: "), new HTML('span', {
+          title: 'Click to edit',
+          id: "node_description_" + source.id,
+          onclick: "nodeVal(" + source.id + ", this, 'description');"
+        }, txt(source.description || "(none)"))
+      ]);
+      d.inject(line);
+      line = new HTML('div', {
+        "class": 'clientcardline'
+      });
       lp = new Date(source.lastping * 1000.0);
       line.inject([new HTML('b', {}, "Last Active: "), txt(moment(lp).fromNow() + " (" + lp.ISOBare() + ")")]);
       d.inject(line);
