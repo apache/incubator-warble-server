@@ -50,27 +50,41 @@ deleteNode = (id, stats) ->
     if confirm('Are you sure you wish to delete this node?')
         xdelete('node/modify', {id: id}, {}, location.reload())
 
-nodeLocation = (id, obj) ->
-    if not document.getElementById("tnodeloc_#{id}")
+
+nodeVal = (id, obj, t) ->
+    if not document.getElementById("node_#{t}_tmp_#{id}")
         loc = obj.innerText
         obj.innerHTML = ""
-        ip = new HTML('input', {style: { color: '#333', width: '320px', height: '24px', padding: '0px'}, data: loc, id: "tnodeloc_#{id}", type: 'text', onkeydown: "saveNodeLocation(#{id}, this, event);", onblur: "savedNodeLocation({}, {id: #{id}, location: this.getAttribute('data')});"})
+        ip = new HTML('input', {style: { color: '#333', width: '320px', height: '24px', padding: '0px'}, data: loc, id: "node_#{t}_tmp_#{id}", type: 'text', onkeydown: "saveNodeValue(#{id}, this, event, '#{t}');", onblur: "savedNodeValue({}, {id: #{id}, type: '#{t}', #{t}: this.getAttribute('data')});"})
         ip.value = loc
         app(obj, ip)
         ip.focus()
-    
 
-saveNodeLocation = (id, obj, e) ->
+
+saveNodeValue = (id, obj, e, t) ->
     if e.key == 'Enter'
-        nloc = obj.value
-        post('node/modify', { id: id, location: nloc}, {id: id, location: nloc}, savedNodeLocation)
+        nval = obj.value
+        js = {
+            id: id
+        }
+        jsx = {
+            id: id,
+            type: t
+        }
+        js[t] = nval
+        jsx[t] = nval
+        post('node/modify', js, jsx, savedNodeValue)
     else if e.key == 'Escape'
-        savedNodeLocation({}, {id: id, location: obj.getAttribute('data')})
+        js = {id: id}
+        jsx = {id: id, type: t}
+        js[t] = obj.getAttribute('data')
+        jsx[t] = obj.getAttribute('data')
+        savedNodeValue(js, jsx)
 
-savedNodeLocation = (json, state) ->
-    obj = document.getElementById("nodeloc_#{state.id}")
+savedNodeValue = (json, state) ->
+    obj = document.getElementById("node_#{state.type}_#{state.id}")
     obj.innerHTML = ""
-    app(obj, txt(state.location))
+    app(obj, txt(state[state.type]))
     
 clientlist = (json, state) ->
     
@@ -85,56 +99,54 @@ clientlist = (json, state) ->
             card = new HTML('div', {class: 'clientcard'} )
             
             # node verified?
-            d = new HTML('div', {height: '36px', position: 'relative', style: {marginBottom: '12px'}})
+            banner = new HTML('div', {class: 'banner'})
+            rline = new HTML('div', {style: { float: 'right', width: '300px', textAlign: 'center'}})
+            lline = new HTML('div', {style: { float: 'left', width: '500px', textAlign: 'center'}})
             
-            line = new HTML('div', {style: { position: 'relative', lineHeight: '30px', height: '30px', float: 'left', padding: '2px',  display: 'inline-block', textAlign: 'center', margin: '-5.25px', width: '225px', borderTopLeftRadius: '6px', background: '#4c8946', marginBottom: '4px'}})
+            hn = new HTML('span', {title: 'Click to edit', id: "node_hostname_#{source.id}", onclick: "nodeVal(#{source.id}, this, 'hostname');"}, txt(source.hostname||"(unknown)"))
+            
+            lline.inject(hn)
             vrf = []
             if not source.verified
-                line.style.background = '#bc9621'
-                card.style.borderColor = '#bc9621'
-                line.style.width = '445px'
+                card.setAttribute('class', 'clientcard orange')
                 vrf = [
                     'Unverified Node',
                     new HTML('button', {class: 'btn btn-sm btn-primary', onclick: "modifyNode(#{source.id}, {verified: true, enabled: true});"}, "Verify + Enable")
                 ]
-                line.inject(vrf)
+                rline.inject(vrf)
                 # delete btn
                 btn = new HTML('button', {title: 'Delete node', class: 'btn btn-square btn-danger', style: {position: 'relative', float: 'right', display: 'inline-block'}, onclick: "deleteNode(#{source.id});"},
                                new HTML('i', {class: 'fa fa-trash'}, '')
                               )
-                line.inject(btn)
-                d.inject(line)
+                rline.inject(btn)
             
             # node enabled?
             if source.verified
-                line = new HTML('div', {style: {position: 'relative', lineHeight: '30px', height: '30px', float: 'right', padding: '2px',display: 'inline-block', textAlign: 'center', margin: '-5.25px', width: '445px', borderTopRightRadius: '6px', background: '#4c8946', marginBottom: '4px'}})
                 vrf = []
-                card.style.borderColor = '#4c8946'
+                card.setAttribute('class', 'clientcard green')
                 if source.enabled
                     vrf = [
                         'Active',
                         new HTML('button', {class: 'btn btn-sm btn-warning', onclick: "modifyNode(#{source.id}, {enabled: false});"}, "Disable")
                     ]
                 else
-                    line.style.background = '#777'
-                    card.style.borderColor = '#777'
+                    card.setAttribute('class', 'clientcard grey')
                     vrf = [
                         'Disabled',
                         new HTML('button', {class: 'btn btn-sm btn-primary', onclick: "modifyNode(#{source.id}, {enabled: true});"}, "Re-enable")
                     ]
-                line.inject(vrf)
-                d.inject(line)
+                rline.inject(vrf)
                 
                 # delete btn
                 btn = new HTML('button', {title: 'Delete node', class: 'btn btn-square btn-danger', style: {position: 'relative', float: 'right', display: 'inline-block'}, onclick: "deleteNode(#{source.id});"},
                                new HTML('i', {class: 'fa fa-trash'}, '')
                               )
-                line.inject(btn)
+                rline.inject(btn)
             
+            banner.inject(lline)
+            banner.inject(rline)
             
-            
-            
-            card.inject(d)
+            card.inject(banner)
             vlist.inject(card)
             
             d = new HTML('p')
@@ -155,15 +167,7 @@ clientlist = (json, state) ->
                 txt(source.ip)
             ])
             d.inject(line)
-            
-            
-            # node hostname
-            line = new HTML('div', {class: 'clientcardline'})
-            line.inject( [
-                new HTML('b', {}, "Hostname: "),
-                txt(source.hostname)
-            ])
-            d.inject(line)
+    
             
             # node fingerprint
             line = new HTML('div', {class: 'clientcardline'})
@@ -177,19 +181,18 @@ clientlist = (json, state) ->
             line = new HTML('div', {class: 'clientcardline'})
             line.inject( [
                 new HTML('b', {}, "Location: "),
-                new HTML('span', {id: "nodeloc_#{source.id}", onclick: "nodeLocation(#{source.id}, this, event);"}, txt(source.location||"(unknown)"))
+                new HTML('span', {title: 'Click to edit', id: "node_location_#{source.id}", onclick: "nodeVal(#{source.id}, this, 'location');"}, txt(source.location||"(unknown)"))
             ])
             d.inject(line)
             
-            
-            
+            # node last ping
+            line = new HTML('div', {class: 'clientcardline'})
+            lp = new Date(source.lastping*1000.0)
+            line.inject( [
+                new HTML('b', {}, "Last Active: "),
+                txt(moment(lp).fromNow() + " (" + lp.ISOBare()  + ")")
+            ])
             d.inject(line)
-            
-            line.inject(new HTML('br'))
-            line.inject(new HTML('br'))
-            
-            
-            
             
         
     #app(slist, tbl)

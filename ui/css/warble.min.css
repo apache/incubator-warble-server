@@ -3085,15 +3085,44 @@ body.error .logo h1 {
 
 .clientcard {
     float: left;
-    width: 450px;
-    height: 160px;
-    border: 4px solid #666;
-    border-radius: 6px;
-    padding: 4px;
-    background: #334249;
+    width: 90%;
+    border: 2px solid #666;
+    border-radius: 3px;
+    padding: 6px;
+    background: #333;
     color: #DDD;
     display: inline-block;
-    margin: 10px;
+    margin: 5px;
+}
+
+.clientcard.green {
+    background: linear-gradient(to bottom, #9CB94E 0, #90B039 100%);
+    color: #FFF;
+}
+
+.clientcard.orange {
+    background: linear-gradient(to bottom, #B95929 0, #AF420B 100%);
+    color: #FFF;
+}
+
+.clientcard.grey {
+    background: linear-gradient(to bottom, #897c6e 0, #6b6259 100%);
+    color: #FFF;
+}
+
+
+
+
+
+
+.clientcard .banner {
+    float: left;
+    width: calc(100% + 8px);
+    margin: -4px;
+    font-size: 1.8rem;
+    border-bottom: 1px solid #333;
+    margin-bottom: 5px;
+    background: rgba(0,0,0,0.1);
 }
 
 .clientcard kbd {
@@ -3113,7 +3142,7 @@ body.error .logo h1 {
 }
 
 .clientcard:hover {
-    background: #444;
+    /*background: rgba(0,0,0,0.2);*/
 }
 
 .clientcardline {
