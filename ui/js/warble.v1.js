@@ -4651,7 +4651,8 @@ nodeLocation = function(id, obj) {
       data: loc,
       id: "tnodeloc_" + id,
       type: 'text',
-      onkeydown: "saveNodeLocation(" + id + ", this, event);"
+      onkeydown: "saveNodeLocation(" + id + ", this, event);",
+      onblur: "savedNodeLocation({}, {id: " + id + ", location: this.getAttribute('data')});"
     });
     ip.value = loc;
     app(obj, ip);
