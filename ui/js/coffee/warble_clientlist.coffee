@@ -95,6 +95,7 @@ clientlist = (json, state) ->
             
             if source.enabled == false
                 d.style.fontStyle = 'italic'
+                d.style.color = "#666"
                 
             # node ID
             t = mk('td')
