@@ -185,6 +185,14 @@ clientlist = (json, state) ->
             ])
             d.inject(line)
             
+            # node description
+            line = new HTML('div', {class: 'clientcardline'})
+            line.inject( [
+                new HTML('b', {}, "Notes: "),
+                new HTML('span', {title: 'Click to edit', id: "node_description_#{source.id}", onclick: "nodeVal(#{source.id}, this, 'description');"}, txt(source.description||"(none)"))
+            ])
+            d.inject(line)
+            
             # node last ping
             line = new HTML('div', {class: 'clientcardline'})
             lp = new Date(source.lastping*1000.0)
