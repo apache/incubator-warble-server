@@ -8,6 +8,7 @@ Welcome to Apache Warble's documentation!
 
    setup
    design-general
+   design-nodedb
 
 
 Indices and tables
