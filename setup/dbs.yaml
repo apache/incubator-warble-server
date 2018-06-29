@@ -33,3 +33,35 @@ registry:
     lastping:     integer   # Last time node was alive
     version:      text      # Node client software version
 
+# Task registry for nodes
+nodetasks:
+  driver: sqlite
+  path: nodetasks.db
+  layout:
+    id:           integer primary key   # ID of task
+    type:         text                  # Task type (test class, so nodes know whether they support it or not)
+    enabled:      boolean               # Whether task is currently enabled or not
+    muted:        boolean               # Whether task alerting is currently muted or not (does not impact testing, only alerting)
+    category:     integer               # Category ID for task (0 means no category/group)
+    name:         text                  # Name (short description) of task
+    payload:      text                  # Task payload (JSON blob to allow custom content)
+
+# Task groups for nodes
+nodecats:
+  driver: sqlite
+  path:   nodecats.db
+  layout:
+    id:           integer primary key   # ID of category
+    name:         text                  # Name of category
+    description:  text                  # Short description of category
+    settings:     text                  # Notification settings (JSON blob to allow for customizations)
+
+# User -> Task category mappings
+nodeacl:
+  driver: sqlite
+  path:   nodeacl.db
+  layout:
+    userid:       text            # username
+    catid:        integer         # task category id
+    access:       integer         # category access level (0 = none, 1 = read, 2 = read/write, 3 = admin)
+
