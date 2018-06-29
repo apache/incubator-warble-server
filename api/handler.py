@@ -118,6 +118,8 @@ class WarbleAPIWrapper:
                 errHeaders = {
                     403: '403 Authentication failed',
                     404: '404 Resource not found',
+                    444: '444 Empty response',
+                    499: '499 Required Token Missing',
                     500: '500 Internal Server Error',
                     501: '501 Gateway error'
                 }
