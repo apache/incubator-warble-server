@@ -37,10 +37,21 @@ Task sensitivity
 A task can also have a specific sensitivity set. Sensitivity denotes
 how failures are treated, and when to alert about state changes:
 
-- `low`: Alerting only happens if all currently active nodes agree that the test has failed, e.g. the service is down completely.
-- `default`: Alerting happens if a majority of nodes agree that the test has failed. This is the default behavior and balances out the need for speedy alerting versus the need for fewer false positives.
-- `high`: Alerting happens if more than one node sees failures. While more sensitive than the default, it still removes a fair bit of false positives by requiring confirmation of a reported failure by at least one other node.
-- `twitchy`: Alerting happens if one or more nodes register failure. This may be useful for services that have guaranteed service level agreements.
+- **low**: Alerting only happens if all currently active nodes agree that
+  the test has failed, e.g. the service is down completely.
+
+- **default**: Alerting happens if a majority of nodes agree that the test
+  has failed. This is the default behavior and balances out the need for
+  speedy alerting versus the need for fewer false positives.
+
+- **high**: Alerting happens if more than one node sees failures. While
+  more sensitive than the default, it still removes a fair bit of false
+  positives by requiring confirmation of a reported failure by at least
+  one other node.
+
+- **twitchy**: Alerting happens if any node registers a failure.
+  This may be useful for services that have guaranteed service level
+  agreements, but can lead to a lot of false positives.
 
 It should be noted that if you run a setup of Warble with only one, or
 very few nodes attached, the sensitivity levels may differ very little
@@ -50,8 +61,8 @@ based on how many active nodes you have at any given time.
 *******************
 Task Categories
 *******************
-Each task is assigned a task category, which helps you separate tasks into
-easily recognizable groups and access definitions.
+Each task is assigned a task category, which helps you separate tasks
+into easily recognizable groups and access definitions.
 
 Each task category has a distinct alerting and escalation path, meaning
 you can assign different teams to different categories, and have alerts
@@ -66,16 +77,17 @@ Users can be assigned the following access levels to categories, on a
 per-user basis:
 
 1. Read-only access: The user can read and analyze test results, but
-   cannot edit or remove tasks, nor see the specific payload details (thus,
-   if you add a test with credentials, users with read-only access cannot
-   see the credentials)
+   cannot edit or remove tasks, nor see the specific payload details
+   (thus, if you add a test with credentials, users with read-only
+   access cannot see the credentials)
 
 2. Read/write access: The user can read, modify, and remove existing
    tests. They can also add new tests to the category.
 
-3. Admin access: The user can, besides permissions listed above, also modify or
-   remove the category altogether or change its alerting options. This access
-   level should generally be reserved for power users only.
+3. Admin access: The user can, besides permissions listed above, also
+   modify or remove the category altogether or change its alerting
+   options. This access level should generally be reserved for power
+   users only.
 
 It should be noted that `super users` on the system (such as the account
 you create at setup) can freely access and modify any aspect of the
