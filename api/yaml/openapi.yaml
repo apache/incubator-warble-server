@@ -479,6 +479,22 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: unexpected error
       summary: Displays the current status of a node
+  /api/node/tasks:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskList'
+          description: Node task list
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: Returns a list of tasks assigned to a given node
   /api/session:
     delete:
       requestBody:
