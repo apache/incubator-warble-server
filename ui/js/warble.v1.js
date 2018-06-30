@@ -4826,7 +4826,11 @@ clientlist = function(json, state) {
       line = new HTML('div', {
         "class": 'clientcardline'
       });
-      line.inject([new HTML('b', {}, "Fingerprint: "), new HTML('kbd', {}, source.fingerprint)]);
+      line.inject([
+        new HTML('b', {}, "Fingerprint: "), new HTML('kbd', {
+          title: "Run node.py --fingerprint if you need to re-check the fingerprint"
+        }, source.fingerprint)
+      ]);
       d.inject(line);
       line = new HTML('div', {
         "class": 'clientcardline'
