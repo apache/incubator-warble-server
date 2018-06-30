@@ -188,7 +188,7 @@ clientlist = (json, state) ->
             line = new HTML('div', {class: 'clientcardline'})
             line.inject( [
                 new HTML('b', {}, "Fingerprint: "),
-                new HTML('kbd', {}, source.fingerprint)
+                new HTML('kbd', {title: "Run node.py --fingerprint if you need to re-check the fingerprint"}, source.fingerprint)
             ])
             d.inject(line)
             
