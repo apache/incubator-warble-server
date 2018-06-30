@@ -4714,7 +4714,7 @@ nodeStatusSort = (function(_this) {
 })(this);
 
 clientlist = function(json, state) {
-  var banner, btn, card, d, hn, len, line, lline, lp, q, retval, rline, slist, source, sources, vlist, vrf;
+  var banner, btn, card, d, hn, len, line, lline, lp, now, q, retval, rline, slist, source, sources, vlist, vrf;
   slist = mk('div');
   vlist = new HTML('div');
   if (json.nodes) {
@@ -4858,8 +4858,14 @@ clientlist = function(json, state) {
         "class": 'clientcardline'
       });
       lp = new Date(source.lastping * 1000.0);
+      now = new Date();
       line.inject([new HTML('b', {}, "Last Active: "), txt(moment(lp).fromNow() + " (" + lp.ISOBare() + ")")]);
       d.inject(line);
+      if (moment(now).unix() - moment(lp).unix() > 900) {
+        card.setAttribute("class", "clientcard red");
+        line.inject(txt(" - Node dead?!"));
+        lline.inject(txt(" - (no contact for > 15 minutes!)"));
+      }
     }
   }
   state.widget.inject(slist, true);
