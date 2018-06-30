@@ -48,6 +48,7 @@ import plugins.crypto
 import plugins.registry
 import plugins.tasks
 import base64
+import time
 
 def run(API, environ, indata, session):
     
@@ -75,6 +76,10 @@ def run(API, environ, indata, session):
                         'name': task.name,
                         'payload': task.payload
                     })
+            # Register that the node contacted us - that counts as being alive
+            session.client.lastping = int(time.time())
+            session.client.save()
+            
             # This is the fun part! Because $design, we have to encrypt using the client's public key!
             # This way, only the _true_ client can decrypt it, and no snooping.
             plain = json.dumps({
