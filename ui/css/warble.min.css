@@ -3110,6 +3110,12 @@ body.error .logo h1 {
     color: #FFF;
 }
 
+.clientcard.red {
+    background: linear-gradient(to bottom, #b21e40 0, #991e39 100%);
+    color: #FFF;
+    
+}
+
 .clientcard input {
     background: rgba(255,255,200,0.45);
     border: 1.5px inset #333;
