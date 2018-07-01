@@ -218,8 +218,8 @@ clientlist = (json, state) ->
             ])
             d.inject(line)
             
-            # Check for inactive (dead?) nodes
-            if (moment(now).unix() - moment(lp).unix() > 900)
+            # Check for inactive (dead?) nodes - only enabled ones, of course.
+            if source.enabled and (moment(now).unix() - moment(lp).unix() > 900)
                 card.setAttribute("class", "clientcard red")
                 line.inject(txt(" - Node dead?!"))
                 lline.inject(txt(" - (no contact for > 15 minutes!)"))
