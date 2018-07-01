@@ -4861,7 +4861,7 @@ clientlist = function(json, state) {
       now = new Date();
       line.inject([new HTML('b', {}, "Last Active: "), txt(moment(lp).fromNow() + " (" + lp.ISOBare() + ")")]);
       d.inject(line);
-      if (moment(now).unix() - moment(lp).unix() > 900) {
+      if (source.enabled && (moment(now).unix() - moment(lp).unix() > 900)) {
         card.setAttribute("class", "clientcard red");
         line.inject(txt(" - Node dead?!"));
         lline.inject(txt(" - (no contact for > 15 minutes!)"));
